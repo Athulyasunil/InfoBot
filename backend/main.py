@@ -6,6 +6,7 @@ from typing import Optional
 from search import get_top_3_urls
 from scrape import scrape_article_text
 from summarise import summarize_with_gemini
+from image import fetch_openverse_image
 app = FastAPI()
 
 @app.get("/ask")
@@ -23,6 +24,11 @@ async def ask(request: Request):
 
     urls = get_top_3_urls(query)
     content = " ".join([scrape_article_text(url) for url in urls])
-    summary = summarize_with_gemini(content, query)
+    summary, image_needed, image_term = summarize_with_gemini(content, query)
+    image_info = fetch_openverse_image(image_term) if image_needed and image_term else None
+    print("Query:", query)
+    print("Summary:", summary)
+    print("Image Needed:", image_needed)
+    print("Image Term:", image_term)
 
-    return {"summary": summary}
+    return {"summary": summary, "image_info": image_info}
