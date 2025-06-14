@@ -20,24 +20,29 @@ def clean_json_from_markdown(text: str) -> str:
 
 def summarize_with_gemini(content: str, query: str):
     prompt = f"""
-Summarize the following content in response to the question: "{query}".
+You are a helpful assistant. A user has asked a question: "{query}".
 
-Then answer:
-- Would a relevant image help the user understand the summary?
-- If YES, suggest a single keyword or short phrase that best represents the image.
+You are given content to summarize based on this question. If the content is relevant, summarize it.
 
-Format your response strictly as JSON:
+**If the content is not relevant to the query**, ignore it and answer the query using your own knowledge.
+
+Then decide whether an image would significantly improve understanding. 
+Only suggest an image if it adds clear educational or visual value.
+
+Respond in this **strict JSON format**:
+
 {{
-  "summary": "...",
-  "image_need": true/false,
-  "image_term": "..."
+  "summary": "<summary of relevant content or direct answer>",
+  "content_relevant": true/false,
+  "image_needed": true/false,
+  "image_term": "<relevant search keyword, or null if image_needed is false>"
 }}
 
-Content:
+Here is the content:
 \"\"\"
 {content}
 \"\"\"
-    """
+"""
 
     response = model.generate_content(prompt)
     cleaned = clean_json_from_markdown(response.text)
@@ -45,9 +50,10 @@ Content:
     try:
         data = json.loads(cleaned)
         summary = data.get("summary", "").strip()
-        image_need = data.get("image_need", False)
+        content_relevant = data.get("content_relevant", False)
+        image_needed = data.get("image_needed", False)
         image_term = data.get("image_term", None)
-        return summary, image_need, image_term
+        return summary, content_relevant, image_needed, image_term
     except Exception as e:
         print("[!] Failed to parse Gemini JSON:", e)
         return response.text.strip(), False, None

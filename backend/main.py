@@ -21,14 +21,13 @@ async def ask(query: Optional[str] = Query(None)):
 async def ask(request: Request):
     data = await request.json()
     query = data.get("query")
-
     urls = get_top_3_urls(query)
     content = " ".join([scrape_article_text(url) for url in urls])
-    summary, image_needed, image_term = summarize_with_gemini(content, query)
+    summary, content_relevant, image_needed, image_term = summarize_with_gemini(content, query)
     image_info = fetch_openverse_image(image_term) if image_needed and image_term else None
     print("Query:", query)
     print("Summary:", summary)
+    print("Content Relevant:", content_relevant)
     print("Image Needed:", image_needed)
     print("Image Term:", image_term)
-
     return {"summary": summary, "image_info": image_info}
