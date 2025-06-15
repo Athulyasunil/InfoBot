@@ -7,8 +7,18 @@ from search import get_top_3_urls
 from scrape import scrape_article_text
 from summarise import summarize_with_gemini
 from image import fetch_openverse_image
-app = FastAPI()
+from fastapi.middleware.cors import CORSMiddleware
 
+
+
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://info-bot-ten.vercel.app/"],  # or set to your frontend URL for more security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.get("/ask")
 async def ask(query: Optional[str] = Query(None)):
     if not query:

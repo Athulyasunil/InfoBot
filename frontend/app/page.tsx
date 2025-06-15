@@ -81,7 +81,7 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-4xl mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold text-gray-900">AI Research Chat</h1>
+          <h1 className="text-2xl font-bold text-gray-900">InfoBot</h1>
           <p className="text-gray-600 text-sm">Ask questions and get comprehensive answers with relevant images</p>
         </div>
       </header>
@@ -92,7 +92,7 @@ export default function Home() {
           {messages.length === 0 && (
             <div className="text-center py-12">
               <div className="text-gray-400 text-lg mb-2">👋</div>
-              <h2 className="text-xl font-semibold text-gray-700 mb-2">Welcome to AI Research Chat</h2>
+              <h2 className="text-xl font-semibold text-gray-700 mb-2">Welcome to InfoBot</h2>
               <p className="text-gray-500">Ask me anything and I'll provide a comprehensive summary with relevant images!</p>
             </div>
           )}
