@@ -27,8 +27,8 @@ You are given content to summarize based on this question. If the content is rel
 **If the content is not relevant to the query**, ignore it and answer the query using your own knowledge.
 
 Then decide whether an image would significantly improve understanding. 
-Only suggest an image if it adds clear educational or visual value.
-
+Only suggest an image if the query is complex, abstract, or conceptually benefits from visual aid. Avoid suggesting images for basic facts, math questions, or obvious queries.
+If an image is needed, provide a relevant search term for the image. If no image is needed, set `image_needed` to false and `image_term` to null.
 Respond in this **strict JSON format**:
 
 {{

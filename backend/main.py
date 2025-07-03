@@ -6,6 +6,7 @@ from typing import Optional
 from search import get_top_3_urls
 from scrape import scrape_article_text
 from summarise import summarize_with_gemini
+from relevance import rank_articles_by_relevance 
 from image import fetch_openverse_image
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -32,8 +33,14 @@ async def ask(request: Request):
     data = await request.json()
     query = data.get("query")
     urls = get_top_3_urls(query)
-    content = " ".join([scrape_article_text(url) for url in urls])
-    summary, content_relevant, image_needed, image_term = summarize_with_gemini(content, query)
+    scraped_contents = [scrape_article_text(url) for url in urls]
+
+    # STEP 3: Rank by relevance
+    ranked_articles = rank_articles_by_relevance(query, scraped_contents)
+
+    # STEP 4: Use top 2-3 for summarization
+    selected_content = " ".join(ranked_articles[:3])
+    summary, content_relevant, image_needed, image_term = summarize_with_gemini(selected_content, query)
     image_info = fetch_openverse_image(image_term) if image_needed and image_term else None
     print("Query:", query)
     print("Summary:", summary)

@@ -138,9 +138,6 @@ export default function Home() {
 
                     {(message.imageInfo.title || message.imageInfo.creator) && (
                       <div className="mt-2 text-xs text-gray-600">
-                        {message.imageInfo.title && (
-                          <p className="font-medium">{message.imageInfo.title}</p>
-                        )}
                         {message.imageInfo.creator && (
                           <p>by {message.imageInfo.creator}</p>
                         )}
